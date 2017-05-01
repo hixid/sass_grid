@@ -1,0 +1,64 @@
+/*
+Author: hixid
+Sass grid for adaptive layouts.
+*/
+
+$pc: 'min-width: 1200px'; 
+$laptop: 'min-width: 992px'; 
+$tablet: 'min-width: 768px';  
+$max_cols: 12;                  // Customize column amount
+$gutter: 1.5;                   // Customize gutter between cols
+
+
+@mixin column {
+    box-sizing: inherit;
+    position: relative;
+    float: left;
+    margin: 1% $gutter*1%;
+
+    & img {
+    	width:100%;
+    }
+}
+
+
+@function set-columns-width ($used_cols_amo) {
+     $cols_amo: $max_cols / $used_cols_amo;
+     @return (100% - 2 * $cols_amo * $gutter) / $cols_amo ;
+}
+
+@mixin generate-columns ($screen_size) {
+    @for $i from 1 through $max_cols {
+        .column#{$screen_size}#{$i} { 
+            @include column;
+            width: set-columns-width($i); 
+        }
+    }
+}
+
+.container {
+     margin: 0 auto;   
+}
+
+.row {
+    box-sizing: border-box;
+    margin:0 $gutter;
+}
+
+@include generate-columns($screen_size:"-xs-");
+
+@media (#{$tablet}) {
+    @include generate-columns($screen_size:"-sm-"); 
+}
+
+@media (#{$laptop}) {
+    @include generate-columns($screen_size:"-md-"); 
+}
+
+@media (#{$pc}) {
+    @include generate-columns($screen_size:"-lg-"); 
+}
+
+.clearfix {
+    clear: both;
+}
